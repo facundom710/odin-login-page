@@ -141,11 +141,18 @@ body {
   width: fit-content;
 }
 
-.frame-footer {
-  margin-top: 8.5rem;
+.frame-footer p:nth-child(2) {
+  margin-top: 1rem;
   padding-top: 2rem;
   border-top: 0.2rem solid var(--dark3);
+}
+
+.frame-footer p {
   font-size: 1rem;
+}
+
+.frame-footer {
+  margin-top: 3rem;
 }
 
 /* ============================================================
@@ -208,7 +215,7 @@ input:focus {
 }
 
 button[type="submit"] {
-  margin-top: 2rem;
+  margin-top: 4rem;
   padding: 0.5rem;
   background-color: var(--main-txt);
   cursor: pointer;
@@ -238,6 +245,24 @@ h1 {
 p {
   font-size: 1.2rem;
   color: var(--second-txt);
+}
+
+a {
+  color: slateblue;
+  text-decoration: none;
+}
+
+a:hover {
+  filter: brightness(130%);
+  text-decoration: underline;
+}
+
+.help-txt {
+  font-size: 1rem;
+}
+
+.forgot-pass {
+  margin-top: 0.5rem;
 }
 
 .status {
