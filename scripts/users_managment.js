@@ -9,6 +9,7 @@ let actualForm = "login";
 const infoText = document.querySelector(".info p");
 const formField = document.querySelector("fieldset");
 const form = document.querySelector("form");
+const footerHelp = document.querySelector("footer p.help-txt")
 
 
 // ============================================================
@@ -117,6 +118,23 @@ const passwFields = [
     ]
 ]
 
+const loginFields = [
+    [
+        {
+            label: "EMPLOYEE ID",
+            id: "employee-id",
+            type: "text",
+            icon: icons.user
+        },
+        {
+            label: "PASSWORD",
+            id: "password",
+            type: "password",
+            icon: icons.lock
+        }
+    ]
+]
+
 // ============================================================
 // FIELD GENERATION
 // ============================================================
@@ -170,23 +188,57 @@ function createRow(fields) {
 function loadSignup() {
     actualForm = "signup";
 
-    form.classList.replace("login-form", "signup-form");
+    if(form.classList.contains("login-form")) form.classList.remove("login-form");
+
+    if(form.classList.contains("recoverpass-form")) form.classList.remove("recoverpass-form");
+
+    form.classList.add("signup-form");
+
+    footerHelp.innerHTML = `Already have an account? <a onclick="loadLogin()">Log in!</a>`
 
     formField.innerHTML = `${signupFields
         .map(createRow)
         .join("")}
 
         <button type="submit">SIGN UP</button>`
-}
+};
 
 function loadRecoverpass() {
     actualForm = "recoverpass";
 
-    form.classList.replace("login-form", "recoverpass-form");
+    if(form.classList.contains("login-form")) form.classList.remove("login-form");
+
+    if(form.classList.contains("signup-form")) form.classList.remove("signup-form");
+
+    form.classList.add("recoverpass-form");
+
+    footerHelp.innerHTML = `<a onclick="loadLogin()">Go back to login</a>`
 
     formField.innerHTML = `${passwFields
         .map(createRow)
         .join("")}
 
         <button type="submit">CHANGE PASSWORD</button>`
-}
+};
+
+function loadLogin() {
+    actualForm = "recoverpass";
+
+    if(form.classList.contains("recoverpass-form")) form.classList.remove("recoverpass-form");
+
+    if(form.classList.contains("signup-form")) form.classList.remove("signup-form");
+
+    form.classList.add("login-form");
+
+    footerHelp.innerHTML = `Doesn't have an user yet? <a onclick="loadSignup()">Sign up!</a>`
+
+    formField.innerHTML = `${loginFields
+        .map(createRow)
+        .join("")}
+        
+        <p class="help-txt forgot-pass">Forgot your password? <a onclick="loadRecoverpass()">Change it here!</a></p>
+
+        <button type="submit">LOG IN</button>`
+};
+
+loadLogin();
