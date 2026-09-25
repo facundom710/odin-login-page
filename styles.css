@@ -159,19 +159,25 @@ body {
    4. FORM
    ============================================================ */
 
-.login-form,
-.login-form fieldset {
+form,
+fieldset {
   display: flex;
   flex-direction: column;
 }
 
 label {
-  margin-bottom: 0.2rem;
   color: var(--main-txt);
 }
 
-label[for="passw"] {
-  margin-top: 1.5rem;
+.login-form .form-row,
+.recoverpass-form .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.signup-form fieldset {
+  gap: 2rem;
 }
 
 .form-field {
@@ -250,6 +256,7 @@ p {
 a {
   color: slateblue;
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {
@@ -278,6 +285,14 @@ a:hover {
   height: auto;
 }
 
+@media (min-width: 480px) {
+  .signup-form .form-row {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
 @media (max-width: 480px) {
   body {
     background-image: none;
@@ -292,5 +307,15 @@ a:hover {
   .vardheim-logo {
     width: 100%;
     height: auto;
+  }
+
+  .sign-up-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  fieldset {
+    gap: 3rem;
   }
 }
