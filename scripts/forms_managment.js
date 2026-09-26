@@ -77,7 +77,10 @@ const signupFields = [
             label: "PHONE",
             id: "phone",
             type: "tel",
-            icon: icons.phone
+            icon: icons.phone,
+            validation: {
+                pattern: "^\\+[0-9]{1,3}[\\s\\-]?[0-9\\s\\(\\)\\-]{6,18}$"
+            }
         }
     ],
 
@@ -86,14 +89,22 @@ const signupFields = [
             label: "PASSWORD",
             id: "password",
             type: "password",
-            icon: icons.lock
+            icon: icons.lock,
+            validation: {
+                minlength: 8,
+                maxlength: 20
+            }
         },
 
         {
             label: "CONFIRM PASSWORD",
             id: "confirm-password",
             type: "password",
-            icon: icons.lock
+            icon: icons.lock,
+            validation: {
+                minlength: 8,
+                maxlength: 20
+            }
         }
     ]
 ];
@@ -104,19 +115,27 @@ const passwFields = [
             label: "EMAIL",
             id: "passrec-email",
             type: "email",
-            icon: icons.email
+            icon: icons.email,
         },
         {
             label: "NEW PASSWORD",
             id: "passrec-newpass",
             type: "password",
-            icon: icons.lock
+            icon: icons.lock,
+            validation: {
+                minlength: 8,
+                maxlength: 20
+            }
         },
         {
             label: "CONFIRM PASSWORD",
             id: "passrec-newpass-confirm",
             type: "password",
-            icon: icons.lock
+            icon: icons.lock,
+            validation: {
+                minlength: 8,
+                maxlength: 20
+            }
         }
     ]
 ]
@@ -127,13 +146,21 @@ const loginFields = [
             label: "EMPLOYEE ID",
             id: "employee-id",
             type: "text",
-            icon: icons.id_card
+            icon: icons.id_card,
+            validation: {
+                minlength: 6,
+                maxlength: 7
+            }
         },
         {
             label: "PASSWORD",
             id: "password",
             type: "password",
-            icon: icons.lock
+            icon: icons.lock,
+            validation: {
+                minlength: 8,
+                maxlength: 20
+            }
         }
     ]
 ]
@@ -142,7 +169,14 @@ const loginFields = [
 // FIELD GENERATION
 // ============================================================
 
-function createField({ label, id, type, icon }) {
+function createRequirements(req = {}) {
+    return Object.entries(req)
+        .map(([attribute, value]) => `${attribute}="${value}"`)
+        .join(" ");
+}
+
+
+function createField({ label, id, type, icon, validation }) {
     return `
         <div class="${id}-field">
 
@@ -165,6 +199,7 @@ function createField({ label, id, type, icon }) {
                 <input
                     type="${type}"
                     id="${id}"
+                    ${createRequirements(validation)}
                     required
                 >
 
@@ -225,7 +260,7 @@ function loadRecoverpass() {
 };
 
 function loadLogin() {
-    actualForm = "recoverpass";
+    actualForm = "login-form";
 
     if(form.classList.contains("recoverpass-form")) form.classList.remove("recoverpass-form");
 
@@ -245,3 +280,61 @@ function loadLogin() {
 };
 
 loadLogin();
+
+// ============================================================
+// FORM VALIDATION
+// ============================================================
+
+function testFormValidity() {
+    const inputs = form.querySelectorAll("input");
+
+    inputs.forEach((input) => {
+        console.log(`--- ${input.id} ---`);
+        console.log("Value:", input.value);
+        console.log("Required:", input.required);
+        console.log("Minlength:", input.minLength);
+        console.log("Maxlength:", input.maxLength);
+        console.log("Pattern:", input.pattern);
+        console.log("Valid:", input.checkValidity());
+        console.log("Validity:", input.validity);
+
+        if (input.validity.valueMissing) {
+            console.log("❌ Required: field is empty");
+        }
+
+        if (input.validity.tooShort) {
+            console.log("❌ Too short");
+        }
+
+        if (input.validity.tooLong) {
+            console.log("❌ Too long");
+        }
+
+        if (input.validity.typeMismatch) {
+            console.log("❌ Invalid type");
+        }
+
+        if (input.validity.patternMismatch) {
+            console.log("❌ Pattern mismatch");
+        }
+
+        console.log("");
+    });
+
+    console.log("FORM VALID:", form.checkValidity());
+}
+
+
+// ============================================================
+// FORM SUBMIT
+// ============================================================
+
+form.addEventListener("submit", (event) => {
+    testFormValidity();
+
+    if (!form.checkValidity()) {
+        event.preventDefault();
+    }
+    event.preventDefault();
+
+});
