@@ -1,6 +1,5 @@
-let users = {};
-
 let actualForm = "login";
+
 
 // ============================================================
 // DOM ELEMENTS
@@ -9,7 +8,7 @@ let actualForm = "login";
 const infoText = document.querySelector(".info p");
 const formField = document.querySelector("fieldset");
 const form = document.querySelector("form");
-const footerHelp = document.querySelector("footer p.help-txt")
+const footerHelp = document.querySelector("footer p.help-txt");
 
 
 // ============================================================
@@ -79,7 +78,9 @@ const signupFields = [
             type: "tel",
             icon: icons.phone,
             validation: {
-                pattern: "^\\+[0-9]{1,3}[\\s\\-]?[0-9\\s\\(\\)\\-]{6,18}$"
+                pattern: "^\\+[0-9]{1,3}[\\s\\-]?[0-9\\s\\(\\)\\-]{6,18}$",
+                minlength: 8,
+                maxlength: 16
             }
         }
     ],
@@ -109,17 +110,19 @@ const signupFields = [
     ]
 ];
 
+
 const passwFields = [
     [
         {
             label: "EMAIL",
-            id: "passrec-email",
+            id: "email",
             type: "email",
-            icon: icons.email,
+            icon: icons.email
         },
+
         {
             label: "NEW PASSWORD",
-            id: "passrec-newpass",
+            id: "newpass",
             type: "password",
             icon: icons.lock,
             validation: {
@@ -127,9 +130,10 @@ const passwFields = [
                 maxlength: 20
             }
         },
+
         {
             label: "CONFIRM PASSWORD",
-            id: "passrec-newpass-confirm",
+            id: "passrec-confirm",
             type: "password",
             icon: icons.lock,
             validation: {
@@ -138,7 +142,8 @@ const passwFields = [
             }
         }
     ]
-]
+];
+
 
 const loginFields = [
     [
@@ -152,6 +157,7 @@ const loginFields = [
                 maxlength: 7
             }
         },
+
         {
             label: "PASSWORD",
             id: "password",
@@ -163,12 +169,14 @@ const loginFields = [
             }
         }
     ]
-]
+];
+
 
 // ============================================================
 // FIELD GENERATION
 // ============================================================
 
+// Convert validation data into HTML attributes
 function createRequirements(req = {}) {
     return Object.entries(req)
         .map(([attribute, value]) => `${attribute}="${value}"`)
@@ -176,6 +184,7 @@ function createRequirements(req = {}) {
 }
 
 
+// Create a single form field
 function createField({ label, id, type, icon, validation }) {
     return `
         <div class="${id}-field">
@@ -199,17 +208,21 @@ function createField({ label, id, type, icon, validation }) {
                 <input
                     type="${type}"
                     id="${id}"
+                    name="${id}"
                     ${createRequirements(validation)}
                     required
                 >
 
             </div>
 
+            <p class="error-msg" id="${id}-error" aria-live="polite"></p>
+
         </div>
     `;
 }
 
 
+// Create a row containing multiple fields
 function createRow(fields) {
     return `
         <div class="form-row">
@@ -226,102 +239,276 @@ function createRow(fields) {
 function loadSignup() {
     actualForm = "signup";
 
-    if(form.classList.contains("login-form")) form.classList.remove("login-form");
+    if (form.classList.contains("login-form")) {
+        form.classList.remove("login-form");
+    }
 
-    if(form.classList.contains("recoverpass-form")) form.classList.remove("recoverpass-form");
+    if (form.classList.contains("recoverpass-form")) {
+        form.classList.remove("recoverpass-form");
+    }
 
     form.classList.add("signup-form");
 
-    footerHelp.innerHTML = `Already have an account? <a onclick="loadLogin()">Log in!</a>`
+    footerHelp.innerHTML =
+        `Already have an account? <a onclick="loadLogin()">Log in</a>`;
 
     formField.innerHTML = `${signupFields
         .map(createRow)
         .join("")}
 
-        <button type="submit">SIGN UP</button>`
-};
+        <button type="submit">SIGN UP</button>`;
+}
+
+
+// ============================================================
+// PASSWORD RECOVERY FORM
+// ============================================================
 
 function loadRecoverpass() {
     actualForm = "recoverpass";
 
-    if(form.classList.contains("login-form")) form.classList.remove("login-form");
+    if (form.classList.contains("login-form")) {
+        form.classList.remove("login-form");
+    }
 
-    if(form.classList.contains("signup-form")) form.classList.remove("signup-form");
+    if (form.classList.contains("signup-form")) {
+        form.classList.remove("signup-form");
+    }
 
     form.classList.add("recoverpass-form");
 
-    footerHelp.innerHTML = `<a onclick="loadLogin()">Go back to login</a>`
+    footerHelp.innerHTML =
+        `<a onclick="loadLogin()">Go back to login</a>`;
 
     formField.innerHTML = `${passwFields
         .map(createRow)
         .join("")}
 
-        <button type="submit">CHANGE PASSWORD</button>`
-};
+        <button type="submit">CHANGE PASSWORD</button>`;
+}
+
+
+// ============================================================
+// LOGIN FORM
+// ============================================================
 
 function loadLogin() {
-    actualForm = "login-form";
+    actualForm = "login";
 
-    if(form.classList.contains("recoverpass-form")) form.classList.remove("recoverpass-form");
+    if (form.classList.contains("recoverpass-form")) {
+        form.classList.remove("recoverpass-form");
+    }
 
-    if(form.classList.contains("signup-form")) form.classList.remove("signup-form");
+    if (form.classList.contains("signup-form")) {
+        form.classList.remove("signup-form");
+    }
 
     form.classList.add("login-form");
 
-    footerHelp.innerHTML = `Doesn't have an user yet? <a onclick="loadSignup()">Sign up!</a>`
+    footerHelp.innerHTML =
+        `Doesn't have an user yet? <a onclick="loadSignup()">Sign up</a>`;
 
     formField.innerHTML = `${loginFields
         .map(createRow)
         .join("")}
-        
-        <p class="help-txt forgot-pass">Forgot your password? <a onclick="loadRecoverpass()">Change it here!</a></p>
 
-        <button type="submit">LOG IN</button>`
+        <p class="help-txt forgot-pass">
+            Forgot your password?
+            <a onclick="loadRecoverpass()">Change it here</a>
+        </p>
+
+        <button type="submit">LOG IN</button>`;
+}
+
+
+// Load the default form
+loadLogin();
+
+
+// ============================================================
+// ERROR MESSAGES
+// ============================================================
+
+const errorMessages = {
+    required: "This field is required.",
+
+    typeMismatch: {
+        email: "Enter a valid email address."
+    },
+
+    patternMismatch: {
+        phone: "Use international format, e.g. +1 99 123 456."
+    },
+
+    tooShort: (input) => `Minimum ${input.minLength} characters.`,
+    tooLong: (input) => `Maximum ${input.maxLength} characters.`
 };
 
-loadLogin();
 
 // ============================================================
 // FORM VALIDATION
 // ============================================================
 
-function testFormValidity() {
-    const inputs = form.querySelectorAll("input");
+// Return the error message for an input (empty string if valid).
+// Covers native HTML rules and custom JavaScript rules.
+function getErrorMessage(input) {
+    const v = input.validity;
 
-    inputs.forEach((input) => {
-        console.log(`--- ${input.id} ---`);
-        console.log("Value:", input.value);
-        console.log("Required:", input.required);
-        console.log("Minlength:", input.minLength);
-        console.log("Maxlength:", input.maxLength);
-        console.log("Pattern:", input.pattern);
-        console.log("Valid:", input.checkValidity());
-        console.log("Validity:", input.validity);
+    // Native HTML rules
+    if (v.valueMissing) return errorMessages.required;
+    if (v.typeMismatch) return errorMessages.typeMismatch[input.type] || "Invalid value.";
+    if (v.patternMismatch) return errorMessages.patternMismatch[input.id] || "Invalid format.";
+    if (v.tooShort) return errorMessages.tooShort(input);
+    if (v.tooLong) return errorMessages.tooLong(input);
 
-        if (input.validity.valueMissing) {
-            console.log("❌ Required: field is empty");
+    // Signup-specific rules
+    if (actualForm === "signup") {
+
+        // Name and surname cannot contain numbers
+        if ((input.id === "name" || input.id === "surname") && /\d/.test(input.value)) {
+            return "Cannot contain numbers.";
         }
 
-        if (input.validity.tooShort) {
-            console.log("❌ Too short");
+        // Email must contain a dot
+        if (input.id === "email" && !input.value.includes(".")) {
+            return "Email must contain a dot.";
         }
 
-        if (input.validity.tooLong) {
-            console.log("❌ Too long");
+        // Passwords must match
+        if (input.id === "confirm-password" &&
+            input.value !== form.elements.password.value) {
+            return "Passwords do not match.";
+        }
+    }
+
+    // Password recovery requires matching passwords
+    if (actualForm === "recoverpass") {
+
+        if (input.id === "passrec-confirm" && input.value !== form.elements["newpass"].value) {
+            return "Passwords do not match.";
         }
 
-        if (input.validity.typeMismatch) {
-            console.log("❌ Invalid type");
+        if (input.id === "email" && !input.value.includes(".")) {
+            return "Email must contain a dot.";
         }
+    }
 
-        if (input.validity.patternMismatch) {
-            console.log("❌ Pattern mismatch");
-        }
+    return "";
+}
 
-        console.log("");
+
+// Show (or clear) the error text under an input.
+// Returns true if the input is valid.
+function showError(input) {
+    const message = getErrorMessage(input);
+    const errorEl = document.getElementById(`${input.id}-error`);
+
+    errorEl.textContent = message;
+    input.classList.toggle("invalid", message !== "");
+
+    return message === "";
+}
+
+
+// Validate every input and show all errors at once
+function isFormValid() {
+    let valid = true;
+
+    form.querySelectorAll("input").forEach((input) => {
+        if (!showError(input)) valid = false;
     });
 
-    console.log("FORM VALID:", form.checkValidity());
+    return valid;
+}
+
+
+// ============================================================
+// VALIDATION EVENTS (event delegation, since fields are dynamic)
+// ============================================================
+
+// Validate when leaving a field
+form.addEventListener("focusout", (event) => {
+    if (event.target.matches("input")) showError(event.target);
+});
+
+// Re-validate while typing if the field already has an error
+form.addEventListener("input", (event) => {
+    if (event.target.matches("input.invalid")) showError(event.target);
+
+    // Keep the "confirm password" error in sync when the password changes
+    const confirmId =
+        event.target.id === "password" ? "confirm-password"
+        : event.target.id === "passrec-newpass" ? "passrec-newpass-confirm"
+        : null;
+
+    if (confirmId) {
+        const confirmInput = document.getElementById(confirmId);
+
+        if (confirmInput && confirmInput.classList.contains("invalid")) {
+            showError(confirmInput);
+        }
+    }
+});
+
+
+// ============================================================
+// SIGNUP DATA
+// ============================================================
+
+// Process signup data after successful validation
+function handleSignUp() {
+
+    const formData = new FormData(form);
+
+    const userName = formData.get("name");
+    const userSurname = formData.get("surname");
+    const userEmail = formData.get("email");
+    const userPhone = formData.get("phone");
+    const userPassword = formData.get("password");
+    const userPasswordConfirm = formData.get("confirm-password");
+
+    console.log({
+        userName,
+        userSurname,
+        userEmail,
+        userPhone,
+        userPassword,
+        userPasswordConfirm
+    });
+}
+
+
+// ============================================================
+// LOGIN DATA
+// ============================================================
+
+function handleLogIn() {
+
+    const formData = new FormData(form);
+
+    const userId = formData.get("employee-id");
+    const userPassword = formData.get("password");
+
+    console.log({
+        userId,
+        userPassword
+    });
+}
+
+
+// ============================================================
+// RECOVER PASSWORD DATA
+// ============================================================
+
+function handleRecoverPass() {
+
+    const formData = new FormData(form);
+
+    const userNewPass = formData.get("newpass");
+
+    console.log(userNewPass);
+
+    loadLogin();
 }
 
 
@@ -330,11 +517,21 @@ function testFormValidity() {
 // ============================================================
 
 form.addEventListener("submit", (event) => {
-    testFormValidity();
 
-    if (!form.checkValidity()) {
-        event.preventDefault();
-    }
+    // Prevent the browser from submitting the form automatically
     event.preventDefault();
 
+    // Stop if any validation fails
+    if (!isFormValid()) {
+        return;
+    }
+
+    // Process the form according to its current type
+    if (actualForm === "signup") {
+        handleSignUp();
+    } else if (actualForm === "login") {
+        handleLogIn();
+    } else if (actualForm === "recoverpass") {
+        handleRecoverPass();
+    }
 });

@@ -276,6 +276,16 @@ a:hover {
   color: var(--green);
 }
 
+.error-msg {
+  color: var(--red);
+  font-size: 1rem;
+  margin-top: 0.35rem;
+  width: 0;         
+  min-width: 100%;   
+  overflow-wrap: anywhere; 
+}
+
+
 /* ============================================================
    6. UTILITIES
    ============================================================ */
