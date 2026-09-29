@@ -1,6 +1,7 @@
 let actualForm = "login";
 
 
+
 // ============================================================
 // DOM ELEMENTS
 // ============================================================
@@ -153,7 +154,8 @@ const loginFields = [
             type: "text",
             icon: icons.id_card,
             validation: {
-                minlength: 6,
+                pattern: "^[0-9]{3}-[0-9]{3}$",
+                minlength: 7,
                 maxlength: 7
             }
         },
@@ -337,7 +339,8 @@ const errorMessages = {
     },
 
     patternMismatch: {
-        phone: "Use international format, e.g. +1 99 123 456."
+        phone: "Use international format, e.g. +1 99 123 456.",
+        "employee-id": "Use ID format, e.g. 123-456."
     },
 
     tooShort: (input) => `Minimum ${input.minLength} characters.`,
@@ -390,6 +393,13 @@ function getErrorMessage(input) {
 
         if (input.id === "email" && !input.value.includes(".")) {
             return "Email must contain a dot.";
+        }
+    }
+
+    // Login-specific rules
+    if (actualForm === "login") {
+        if (input.id === "employee-id" && !/^[0-9]{3}-[0-9]{3}$/.test(input.value)) {
+            return "Use ID format, e.g. 123-456.";
         }
     }
 
@@ -460,21 +470,38 @@ function handleSignUp() {
 
     const formData = new FormData(form);
 
-    const userName = formData.get("name");
-    const userSurname = formData.get("surname");
-    const userEmail = formData.get("email");
-    const userPhone = formData.get("phone");
-    const userPassword = formData.get("password");
-    const userPasswordConfirm = formData.get("confirm-password");
-
-    console.log({
-        userName,
-        userSurname,
-        userEmail,
-        userPhone,
-        userPassword,
-        userPasswordConfirm
+    const result = registerUser({
+        name: formData.get("name"),
+        surname: formData.get("surname"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        password: formData.get("password")
     });
+
+    if (!result.success) {
+        const errorEl = document.getElementById(`${result.error}-error`);
+        const input = document.getElementById(result.error);
+
+        errorEl.textContent = `This ${result.error} is already registered.`;
+        input.classList.add("invalid");
+        return;
+    }
+
+    console.log("User created:", result.user);
+    console.log("All users:", users);
+
+    // Replace the form with confirmation text showing the user's ID and password
+    actualForm = "registered";
+
+    formField.innerHTML = `
+        <div class="signup-success">
+            <p class="success-title">REGISTRATION SUCCESSFUL</p>
+            <p>EMPLOYEE ID: <strong>${result.user.id}</strong></p>
+        </div>
+
+        <button type="button" class="action-btn" onclick="loadLogin()">GO TO LOGIN</button>
+    `;
+
 }
 
 
@@ -486,13 +513,25 @@ function handleLogIn() {
 
     const formData = new FormData(form);
 
-    const userId = formData.get("employee-id");
-    const userPassword = formData.get("password");
+    const result = loginUser(
+        formData.get("employee-id"),
+        formData.get("password")
+    );
 
-    console.log({
-        userId,
-        userPassword
-    });
+    if (!result.success) {
+        const errorEl = document.getElementById("employee-id-error");
+        const input = document.getElementById("employee-id");
+
+        errorEl.textContent = "Invalid ID or password.";
+        input.classList.add("invalid");
+        return;
+    }
+
+    console.log("Login successful:", result.user);
+
+    // Save user session and redirect to the dashboard
+    sessionStorage.setItem("activeUser", JSON.stringify(result.user));
+    window.location.href = "./dashboard.html";
 }
 
 
@@ -504,9 +543,21 @@ function handleRecoverPass() {
 
     const formData = new FormData(form);
 
-    const userNewPass = formData.get("newpass");
+    const result = recoverPassword(
+        formData.get("email"),
+        formData.get("newpass")
+    );
 
-    console.log(userNewPass);
+    if (!result.success) {
+        const errorEl = document.getElementById("email-error");
+        const input = document.getElementById("email");
+
+        errorEl.textContent = "No account found with this email.";
+        input.classList.add("invalid");
+        return;
+    }
+
+    console.log("Password changed for:", result.user);
 
     loadLogin();
 }

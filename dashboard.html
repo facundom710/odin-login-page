@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="icon" href="./assets/vardheim_isotipe.svg" />
+    <title>Vardheim // System Terminal</title>
+  </head>
+
+  <body>
+    <main class="login-wrap">
+      <section class="login-frame" aria-label="System dashboard">
+        <header class="info">
+          <img
+            class="vardheim-logo"
+            src="./assets/vardheim_logo.png"
+            alt="Vardheim logo"
+          />
+          <h1>PERSONAL AUTHENTICATION SYSTEM</h1>
+          <p>
+            RESTRICTED ACCESS
+            <br />
+            PERSONAL ONLY
+          </p>
+        </header>
+
+        <div class="dashboard-panel">
+          <div class="auth-badge">
+            <span class="status">●</span>
+            <span>ACCESS GRANTED // SESSION ACTIVE</span>
+          </div>
+
+          <div class="employee-card">
+            <div class="card-row">
+              <span class="card-label">EMPLOYEE ID:</span>
+              <span class="card-value" id="disp-id">123-456</span>
+            </div>
+            <div class="card-row">
+              <span class="card-label">PERSONNEL:</span>
+              <span class="card-value" id="disp-name">RESEARCH OPERATOR</span>
+            </div>
+            <div class="card-row">
+              <span class="card-label">EMAIL:</span>
+              <span class="card-value" id="disp-email">classified@vardheim.sys</span>
+            </div>
+            <div class="card-row">
+              <span class="card-label">CLEARANCE:</span>
+              <span class="card-value" style="color: var(--green);">LEVEL D3 // APPROVED</span>
+            </div>
+          </div>
+
+          <div class="terminal-box">
+            <p class="terminal-header">SUBSYSTEM TELEMETRY // REAL-TIME</p>
+            <p class="terminal-line"><span class="term-ok">[ONLINE]</span> RESEARCH ARCHIVE DB: SYNCED</p>
+            <p class="terminal-line"><span class="term-ok">[ONLINE]</span> CONTAINMENT SECTOR 4: NOMINAL</p>
+            <p class="terminal-line"><span class="term-ok">[ONLINE]</span> ATMOSPHERIC MONITOR: 101.3 kPa</p>
+            <p class="terminal-line"><span class="term-ok">[ONLINE]</span> NEURAL UPLINK: ENCRYPTED (AES-256)</p>
+          </div>
+
+          <button type="button" class="btn-logout" id="logout-btn">
+            TERMINATE SESSION // LOG OUT
+          </button>
+        </div>
+
+        <footer class="frame-footer">
+          <p class="foot-txt">VARDHEIM // INTERNAL SYSTEM</p>
+          <p class="foot-txt">FACILITY: RESEARCH AND INVESTIGATION</p>
+          <p class="foot-txt">ACCESS LEVEL: D3</p>
+          <p class="foot-txt">SYSTEM STATUS: <span class="status">●</span> OPERATIONAL</p>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>
