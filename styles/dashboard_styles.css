@@ -4,12 +4,33 @@
    DASHBOARD STYLES — TERMINAL
    ============================================================ */
 
-.dashboard-panel {
+body {
+  background-color: var(--dark);
+  background-image: none;
+
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1.5rem;
-  width: 100%;
-  max-width: 32rem;
+}
+
+main {
+  min-width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.6rem;
+  padding: 0 15%;
+}
+
+header {
+  align-self: center;
+  padding: 1rem;
+}
+
+.vardheim-logo {
+  margin: 0 !important;
+  width: 30rem !important;
 }
 
 .auth-badge {
@@ -22,6 +43,7 @@
   color: var(--green);
   font-size: 1.1rem;
   letter-spacing: 0.05em;
+  margin: 1.5rem 0 1.5rem 0;
 }
 
 .employee-card {
@@ -36,7 +58,6 @@
 .employee-card .card-row {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
 }
 
 .employee-card .card-label {
@@ -95,4 +116,64 @@
   background-color: var(--red);
   border-color: var(--red);
   color: white;
+}
+
+.frame-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.frame-footer p:nth-child(1) {
+    margin-top: 1rem;
+    padding-top: 2rem;
+    border-top: 0.2rem solid var(--dark3);
+}
+
+.frame-footer p:nth-child(2) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 1.5rem;
+  }
+
+  main {
+    width: 100%;
+    min-width: 0;
+    gap: 1.5rem;
+  }
+
+  header {
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .vardheim-logo {
+    width: 100% !important;
+    height: auto;
+  }
+
+  main > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  
+  .card-row {
+    display: flex; 
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .employee-card .card-value,
+  .terminal-line {
+    overflow-wrap: anywhere;
+  }
+
+  .btn-logout {
+    font-size: 1rem;
+  }
 }
