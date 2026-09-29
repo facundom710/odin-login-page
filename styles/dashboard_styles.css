@@ -137,9 +137,6 @@ header {
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 1.5rem;
-  }
 
   main {
     width: 100%;
